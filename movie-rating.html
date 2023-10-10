@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie App</title>
+</head>
+<body>
+    <form>
+        <input type="text" id="movie-title" placeholder="Movie Title">
+        <input type="number" name="rating" id="rating" placeholder="Rate 1 - 10" min='0' max='10'>
+        <button type="submit" id="submit">Submit</button>
+    </form>
+    <ul id="movie-list"></ul>
+
+    <button type="button" id='sort-title'>Sort by Title</button>
+    <button type="button" id="sort-rating">Sort by Ratings</button>
+
+    
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+ <script>
+    const movies = [];
+   
+    $('#submit').on('click', function(e) {
+            e.preventDefault();
+            const title = $('#movie-title').val();
+            const rated = $('#rating').val();
+            if (title.length >= 1 && rated >= 0 && rated <= 10) {
+                movies.push({ title, rated });
+                $('#movie-list').append(`<li>${title} (Rating: ${rated}) <button class="remove">Delete</button></li>`);
+                $('#movie-title').val('');
+                $('#rating').val('');
+            }
+        });
+
+    $("#movie-list").on('click', '.remove', function() {
+        const index = $(this).closest('li').index();
+        movies.splice(index, 1);
+        $(this).closest('li').remove();
+    });
+$('#sort-title').on('click', function() {
+    movies.sort((a,b) => a.title.localeCompare(b.title));
+    displayMovies();
+})
+$("#sort-rating").on('click', function() {
+    movies.sort((a,b) => a.rated - b.rated);
+    displayMovies();
+});
+function displayMovies() {
+    $('#movie-list').empty();
+    movies.forEach(movie => {
+        $("#movie-list").append(`<li>${movie.title} (Rating: ${movie.rated}) <button class="remove">Delete</button>`);
+    });
+}
+
+
+</script>
+</html>
